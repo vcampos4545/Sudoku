@@ -1,8 +1,10 @@
 import numpy as np
+from spot import Spot
+
 
 def solve(grid):
     """
-    Modifies grid to be a valid solution
+    Returns a solved grid using backtracking and recursion
     """
     for row in range(len(grid)):
         for col in range(len(grid[row])):
@@ -14,7 +16,8 @@ def solve(grid):
                         grid[row][col] = 0
 
                 return
-    print(np.matrix(grid))
+
+    print('Solved board:\n',np.matrix(grid))
 
 #Helpers
 def possible(grid, i, j, n):
