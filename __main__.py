@@ -5,7 +5,7 @@ from solver import solve
 import numpy as np
 from spot import Spot
 
-def generate_board():
+def generate_board(gap):
     # TO DO: Generate a board by solving a board and removing numbers
     board = [[5,3,0,0,7,0,0,0,0],
              [6,0,0,1,9,5,0,0,0],
@@ -22,7 +22,7 @@ def generate_board():
     for row in range(len(board)):
         temp = []
         for col in range(len(board[row])):
-            temp.append(Spot(row, col, board[row][col], WIDTH//9))
+            temp.append(Spot(row, col, board[row][col], gap))
         pygame_board.append(temp)
 
     return pygame_board, board
@@ -36,20 +36,38 @@ def draw_grid(WIN, gap):
             pygame.draw.line(WIN, BLACK, (0, i*gap), (WIDTH, i*gap))
             pygame.draw.line(WIN, BLACK, (i*gap, 0), (i*gap, WIDTH))
 
+def get_clicked_pos(gap):
+    x, y = pygame.mouse.get_pos()
+
+    row = y // gap
+    col = x // gap
+
+    return row, col
+
 def main():
     # Initialize pygame window and board
     WIN = pygame.display.set_mode((WIDTH, WIDTH))
     pygame.display.set_caption('Sudoku')
-    pygame_board, board = generate_board()
+    gap = WIDTH//9
+    pygame_board, board = generate_board(gap)
 
     # Game Loop
     loop = True
+    selected_spot = None
     while loop:
         # Check for events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loop = False
 
+            if pygame.mouse.get_pressed()[0]: # LEFT
+
+                row, col = get_clicked_pos(gap)
+                spot = pygame_board[row][col]
+                if selected_spot:
+                    selected_spot.selected = False
+                selected_spot = spot
+                selected_spot.selected = True
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -59,7 +77,6 @@ def main():
                     print(np.matrix(board))
 
         WIN.fill(WHITE)
-        gap = WIDTH//9
         for row in pygame_board:
             for spot in row:
                 spot.draw(WIN)

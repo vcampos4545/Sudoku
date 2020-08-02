@@ -6,6 +6,7 @@ def solve(grid):
     """
     Returns a solved grid using backtracking and recursion
     """
+    # TO DO: Fix solve and somehow get solved board in variable
     for row in range(len(grid)):
         for col in range(len(grid[row])):
             if grid[row][col] == 0:
