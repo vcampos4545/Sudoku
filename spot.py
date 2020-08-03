@@ -3,7 +3,7 @@ pygame.font.init()
 from constants import *
 
 class Spot:
-    def __init__(self, i, j, num, width):
+    def __init__(self, i, j, num, width, given=False):
         self.i = i
         self.j = j
         self.w = width
@@ -11,6 +11,8 @@ class Spot:
         self.x = j * self.w
         self.num = num
         self.selected = False
+        self.fcolor = BLACK
+        self.given = given
 
     def draw(self, win):
         if self.selected:
@@ -20,7 +22,7 @@ class Spot:
 
         if self.num != 0:
             font = pygame.font.Font('freesansbold.ttf',50)
-            display = font.render(str(self.num),True,BLACK)
+            display = font.render(str(self.num),True,self.fcolor)
             textRect = display.get_rect()
             textRect.center = (self.x + self.w//2,self.y + self.w//2)
             win.blit(display,textRect)
