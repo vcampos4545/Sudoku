@@ -1,24 +1,24 @@
 import numpy as np
-from spot import Spot
 
-
-def solve(grid):
+def solve(board, pygame_board):
     """
     Returns a solved grid using backtracking and recursion
     """
     # TO DO: Fix solve and somehow get solved board in variable
-    for row in range(len(grid)):
-        for col in range(len(grid[row])):
-            if grid[row][col] == 0:
+    for row in range(len(board)):
+        for col in range(len(board[row])):
+            if board[row][col] == 0:
                 for n in range(1,10):
-                    if possible(grid, row, col, n):
-                        grid[row][col] = n
-                        solve(grid)
-                        grid[row][col] = 0
+                    if possible(board, row, col, n):
+                        board[row][col] = n
+                        solve(board, pygame_board)
+                        board[row][col] = 0
 
                 return
 
-    print('Solved board:\n',np.matrix(grid))
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            pygame_board[i][j].num = board[i][j]
 
 #Helpers
 def possible(grid, i, j, n):
