@@ -1,4 +1,5 @@
 from spot import Spot
+import random
 import pygame
 from constants import *
 from solver import solve, possible
@@ -34,13 +35,14 @@ class Game:
                 self.set_selected_spot()
 
             if event.type == pygame.KEYDOWN:
+                #Space to Solve board
                 if event.key == pygame.K_SPACE:
-                    print('Solving board')
-                    solve(self.board, self.pygame_board)
-
+                    self.set_pygame_board(self.solved_board)
+                #n to create a new board
                 if event.key == pygame.K_n:
+                    self.lives = 3
                     self.generate_board()
-
+                #r to reset current board
                 if event.key == pygame.K_r:
                     self.reset()
 
@@ -64,10 +66,10 @@ class Game:
                         self.sel_spot.num = 8
                     if event.key == pygame.K_9:
                         self.sel_spot.num = 9
-
-                    if possible(self.board, self.sel_spot.i, self.sel_spot.j, self.sel_spot.num):
-                        self.sel_spot.fcolor = GREEN
-                    else:
+                    #Set inputed spot to red depending on if it is the wrong number
+                    #at the selected spot
+                    i,j = self.sel_spot.i, self.sel_spot.j
+                    if self.sel_spot.num != 0 and self.sel_spot.num != self.solved_board[i][j]:
                         self.sel_spot.fcolor = RED
                         self.lives -= 1
 
@@ -76,17 +78,16 @@ class Game:
 #========================================================================
 
     def generate_board(self):
-        self.lives = 3
         # TO DO: Generate a board by solving a board and removing numbers
         self.board = [[5,3,0,0,7,0,0,0,0],
                      [6,0,0,1,9,5,0,0,0],
                      [0,9,8,0,0,0,0,6,0],
                      [8,0,0,0,6,0,0,0,3],
-                     [4,0,0,8,0,3,0,0,1],
+                     [4,0,0,8,0,0,0,0,1],
                      [7,0,0,0,2,0,0,0,6],
                      [0,6,0,0,0,0,2,8,0],
                      [0,0,0,4,1,9,0,0,5],
-                     [0,0,0,0,8,0,0,7,9]]
+                     [0,0,0,0,8,0,0,7,0]]
 
         # Make pygame board of rows and columns of spot objects from the generated
         # board matrix
@@ -103,9 +104,24 @@ class Game:
 
         self.pygame_board = temp_board
 
+        solve(self.board, self.pygame_board)
+        solved = []
+        for row in range(len(self.pygame_board)):
+            temp = []
+            for col in range(len(self.pygame_board[row])):
+                temp.append(self.pygame_board[row][col].num)
+            solved.append(temp)
+
+        self.set_pygame_board(self.board)
+        self.solved_board = solved
+
     def draw_spots(self, WIN):
         for row in self.pygame_board:
             for spot in row:
+                if spot.num == 0:
+                    spot.fcolor = BLACK
+                elif not spot.given and spot.num == self.solved_board[spot.i][spot.j]:
+                    spot.fcolor = GREEN
                 spot.draw(WIN)
 
     def draw_grid(self, WIN):
@@ -127,10 +143,12 @@ class Game:
 
     def reset(self):
         self.lives = 3
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if not self.pygame_board[i][j].given:
-                    self.pygame_board[i][j].num = 0
+        self.set_pygame_board(self.board)
+
+    def set_pygame_board(self, board):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                self.pygame_board[i][j].num = board[i][j]
 
     def set_selected_spot(self):
         x, y = pygame.mouse.get_pos()

@@ -26,6 +26,3 @@ class Spot:
             textRect = display.get_rect()
             textRect.center = (self.x + self.w//2,self.y + self.w//2)
             win.blit(display,textRect)
-
-    def set_color(self, color):
-        self.color = color
