@@ -24,6 +24,9 @@ class Game:
             self.reset()
             self.lives = 3
 
+        if self.sel_spot and self.sel_spot.num != 0:
+            self.highlight(self.sel_spot.num)
+
         # Check for events
         for event in pygame.event.get():
 
@@ -66,9 +69,11 @@ class Game:
                         self.sel_spot.num = 8
                     if event.key == pygame.K_9:
                         self.sel_spot.num = 9
+
                     #Set inputed spot to red depending on if it is the wrong number
                     #at the selected spot
                     i,j = self.sel_spot.i, self.sel_spot.j
+                    self.board[i][j] = self.sel_spot.num
                     if self.sel_spot.num != 0 and self.sel_spot.num != self.solved_board[i][j]:
                         self.sel_spot.fcolor = RED
                         self.lives -= 1
@@ -140,6 +145,16 @@ class Game:
         textRect = display.get_rect()
         textRect.center = (60,WIDTH + 25)
         WIN.blit(display,textRect)
+
+    def highlight(self, n):
+        for row in self.pygame_board:
+            for spot in row:
+                spot.highlight = False
+
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                if self.board[row][col] == n:
+                    self.pygame_board[row][col].highlight = True
 
     def reset(self):
         self.lives = 3

@@ -13,10 +13,13 @@ class Spot:
         self.selected = False
         self.fcolor = BLACK
         self.given = given
+        self.highlight = False
 
     def draw(self, win):
         if self.selected:
             pygame.draw.rect(win, LIGHT_GREY, (self.x, self.y, self.w, self.w))
+        elif self.highlight:
+            pygame.draw.rect(win, YELLOW, (self.x, self.y, self.w, self.w))
         else:
             pygame.draw.rect(win, WHITE, (self.x, self.y, self.w, self.w))
 
