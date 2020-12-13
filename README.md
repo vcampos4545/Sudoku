@@ -1,8 +1,5 @@
 # Sudoku
-Sudoku built with pygame and python
+Sudoku recreated using python and pygame
 
 # To run:
 python Sudoku
-
-# To Solve:
-press space
