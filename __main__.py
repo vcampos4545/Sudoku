@@ -1,4 +1,5 @@
 import pygame
+pygame.init()
 from constants import *
 from game import Game
 

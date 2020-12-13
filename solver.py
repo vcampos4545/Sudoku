@@ -19,6 +19,7 @@ def solve(board, pygame_board):
     for i in range(len(board)):
         for j in range(len(board[i])):
             pygame_board[i][j].num = board[i][j]
+    print('A solution')
 
 #Helpers
 def possible(grid, i, j, n):
